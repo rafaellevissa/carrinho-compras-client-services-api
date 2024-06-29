@@ -1,4 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from 'typeorm';
+import { Exclude } from 'class-transformer';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  BaseEntity,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class Product extends BaseEntity {
@@ -16,4 +24,12 @@ export class Product extends BaseEntity {
 
   @Column()
   thumbnail: string;
+
+  @CreateDateColumn()
+  @Exclude()
+  public createdAt: Date;
+
+  @UpdateDateColumn()
+  @Exclude()
+  public updatedAt: Date;
 }
