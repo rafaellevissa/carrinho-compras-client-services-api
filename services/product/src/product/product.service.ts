@@ -11,9 +11,14 @@ export class ProductService {
     private productRepository: Repository<Product>,
   ) {}
 
+  /**
+   *  Get a list of products
+   * @param pagination PaginationDto
+   * @returns Promise<Paginated<Product[]>>
+   */
   public async getProducts({
-    take,
-    page,
+    take = 10,
+    page = 1,
   }: PaginationDto): Promise<Paginated<Product[]>> {
     const products = await this.productRepository.find({
       take,
@@ -25,5 +30,14 @@ export class ProductService {
       perPage: take,
       data: products,
     };
+  }
+
+  /**
+   * Get product by id
+   * @param id number
+   * @returns Promise<Product>
+   */
+  public async getProduct(id: number): Promise<Product> {
+    return this.productRepository.findOneOrFail({ where: { id } });
   }
 }
