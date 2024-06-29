@@ -1,5 +1,6 @@
 export default () => ({
   port: parseInt(process.env.APP_PORT) || 3001,
+  isDevelopment: process.env.NODE_ENV == 'production' ? false : true,
   database: {
     driver: process.env.DB_DRIVER as any,
     hostname: process.env.DB_HOSTNAME,

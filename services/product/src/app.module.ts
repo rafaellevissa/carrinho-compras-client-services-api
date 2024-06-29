@@ -18,7 +18,7 @@ import { join } from 'path';
       password: configuration().database.password,
       database: configuration().database.name,
       entities: [join(__dirname, '**', '*.entity.{ts,js}')],
-      synchronize: true,
+      synchronize: configuration().isDevelopment,
     }),
     ProductModule,
   ],
