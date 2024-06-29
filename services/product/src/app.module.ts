@@ -2,23 +2,16 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductModule } from './product/product.module';
 import { ConfigModule } from '@nestjs/config';
-import configuration from './config/configuration';
-import { join } from 'path';
+import constants from './common/constants';
+import { TypeOrmConfig } from './common/config/ormconfig';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [configuration],
+      load: [constants],
     }),
-    TypeOrmModule.forRoot({
-      type: configuration().database.driver,
-      host: configuration().database.hostname,
-      port: configuration().database.port,
-      username: configuration().database.username,
-      password: configuration().database.password,
-      database: configuration().database.name,
-      entities: [join(__dirname, '**', '*.entity.{ts,js}')],
-      synchronize: configuration().isDevelopment,
+    TypeOrmModule.forRootAsync({
+      useClass: TypeOrmConfig,
     }),
     ProductModule,
   ],
