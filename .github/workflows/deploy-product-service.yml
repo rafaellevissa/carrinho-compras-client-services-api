@@ -1,0 +1,81 @@
+name: Deploy Product Service
+
+on:
+  push:
+    paths:
+      - services/product/**
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: rafaellevissa/allu-product-service:latest
+  APP_NAME: allu-product-service
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    if: github.ref_name == 'main'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.Js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ^21
+
+      - name: Installing Dependencies
+        working-directory: services/product
+        run: npm install
+
+      - name: Create dotenv
+        working-directory: services/product
+        run: echo "${{ secrets.PRODUCT_ENV }}" | base64 --decode > .env
+
+      - name: Run tests
+        run: npm run test
+        working-directory: services/product
+
+  build:
+    runs-on: ubuntu-latest
+    if: github.ref_name == 'main'
+    needs: tests
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Login to Github Registrey
+        if: success()
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create dotenv
+        working-directory: services/product
+        run: echo "${{ secrets.PRODUCT_ENV }}" | base64 --decode > .env
+
+      - name: Build image api
+        working-directory: services/product
+        run: docker build -f .docker/Dockerfile -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} .
+
+      - name: Publish image api
+        run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref_name == 'main'
+    steps:
+      - name: EC2 Deployment
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          script: |-
+            docker container stop ${{ env.APP_NAME}} || true
+            docker container rm ${{ env.APP_NAME}} || true
+            docker login ${{ env.REGISTRY }} -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
+            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+            docker run -d --restart=unless-stopped --net host --name ${{ env.APP_NAME}} ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
