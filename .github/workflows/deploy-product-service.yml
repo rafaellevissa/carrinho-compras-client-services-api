@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - services/product/**
+      - .github/**
 
 env:
   REGISTRY: ghcr.io
@@ -66,11 +67,11 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           script: |-
-            echo "${{ secrets.PRODUCT_ENV }}" | base64 --decode > /tmp/.env
-            app_port="$(/tmp/.env | grep -E '^APP_PORT=[0-9]+$' | cut -d '=' -f 2)"
+            echo "${{ secrets.PRODUCT_ENV }}" | base64 --decode > /tmp/.env-product
+            app_port="$(cat /tmp/.env-product | grep -E '^APP_PORT=[0-9]+$' | cut -d '=' -f 2)"
             docker container stop ${{ env.APP_NAME}} || true
             docker container rm ${{ env.APP_NAME}} || true
             docker login ${{ env.REGISTRY }} -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
             docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-            docker run -d --restart=unless-stopped -p "${app_port}:${app_port}" --env-file /tmp/.env --name ${{ env.APP_NAME}} ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-            rm /tmp/.env
+            docker run -d --restart=unless-stopped -p "${app_port}:${app_port}" --env-file /tmp/.env-product --name ${{ env.APP_NAME}} ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+            rm /tmp/.env-product
