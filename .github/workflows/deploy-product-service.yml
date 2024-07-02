@@ -27,10 +27,6 @@ jobs:
         working-directory: services/product
         run: npm install
 
-      - name: Create dotenv
-        working-directory: services/product
-        run: echo "${{ secrets.PRODUCT_ENV }}" | base64 --decode > .env
-
       - name: Run tests
         run: npm run test
         working-directory: services/product
@@ -51,10 +47,6 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Create dotenv
-        working-directory: services/product
-        run: echo "${{ secrets.PRODUCT_ENV }}" | base64 --decode > .env
-
       - name: Build image api
         working-directory: services/product
         run: docker build -f .docker/Dockerfile -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} .
@@ -74,8 +66,11 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           script: |-
+            echo "${{ secrets.PRODUCT_ENV }}" | base64 --decode > /tmp/.env
+            app_port="$(cat env | grep -E '^APP_PORT=[0-9]+$' | cut -d '=' -f 2)"
             docker container stop ${{ env.APP_NAME}} || true
             docker container rm ${{ env.APP_NAME}} || true
             docker login ${{ env.REGISTRY }} -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
             docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-            docker run -d --restart=unless-stopped --net host --name ${{ env.APP_NAME}} ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+            docker run -d --restart=unless-stopped -p ${app_port}:${app_port} --env-file /tmp/.env --name ${{ env.APP_NAME}} ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+            rm /tmp/.env
