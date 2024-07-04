@@ -62,7 +62,23 @@ describe('ShoppingCartController', () => {
 
   describe('create', () => {
     it('should create a new shopping cart item', async () => {
-      const shoppingCartDto: ShoppingCartDto = { productId: 1, price: 10 };
+      const shoppingCartDto: ShoppingCartDto = {
+        productId: 1,
+        price: 10,
+        metadata: {
+          id: 1,
+          name: 'POLAR Pacer',
+          description: 'Relógio Esportivo com GPS',
+          price: 4558.87,
+          thumbnail:
+            'https://yacare-products-image.s3.sa-east-1.amazonaws.com/new-site/POLAR+PACER/Polar+Pacer+Thumb+2.png',
+          images: [
+            'https://yacare-products-image.s3.sa-east-1.amazonaws.com/new-site/POLAR+PACER/Polar+Pacer+Thumb+2.png',
+            'https://yacare-products-image.s3.sa-east-1.amazonaws.com/new-site/POLAR+PACER/Polar+Pacer+2.jpg',
+            'https://yacare-products-image.s3.sa-east-1.amazonaws.com/new-site/POLAR+PACER/Polar+Pacer+3.jpg',
+          ],
+        },
+      };
       const mockShoppingCartItem = {
         id: 1,
         productId: 1,
@@ -78,18 +94,25 @@ describe('ShoppingCartController', () => {
       const result = await controller.create(shoppingCartDto);
 
       expect(result).toBe(mockShoppingCartItem);
-      expect(shoppingCartService.attach).toHaveBeenCalledWith(1, 1, 10);
+      expect(shoppingCartService.attach).toHaveBeenCalledWith(
+        1,
+        shoppingCartDto.productId,
+        shoppingCartDto.price,
+        shoppingCartDto.metadata,
+      );
     });
   });
 
   describe('remove', () => {
     it('should remove a shopping cart item by productId', async () => {
-      const mockShoppingCartItem = {
-        id: 1,
-        productId: 1,
-        userId: 1,
-        price: 10,
-      } as ShoppingCart;
+      const mockShoppingCartItem = [
+        {
+          id: 1,
+          productId: 1,
+          userId: 1,
+          price: 10,
+        },
+      ] as ShoppingCart[];
 
       jest
         .spyOn(shoppingCartService, 'detach')

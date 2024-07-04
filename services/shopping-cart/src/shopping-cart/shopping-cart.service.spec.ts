@@ -57,25 +57,40 @@ describe('ShoppingCartService', () => {
       const userId = 1;
       const productId = 1;
       const price = 10;
+      const metadata = {
+        id: 1,
+        name: 'POLAR Pacer',
+        description: 'Relógio Esportivo com GPS',
+        price: 4558.87,
+        thumbnail:
+          'https://yacare-products-image.s3.sa-east-1.amazonaws.com/new-site/POLAR+PACER/Polar+Pacer+Thumb+2.png',
+        images: [
+          'https://yacare-products-image.s3.sa-east-1.amazonaws.com/new-site/POLAR+PACER/Polar+Pacer+Thumb+2.png',
+          'https://yacare-products-image.s3.sa-east-1.amazonaws.com/new-site/POLAR+PACER/Polar+Pacer+2.jpg',
+          'https://yacare-products-image.s3.sa-east-1.amazonaws.com/new-site/POLAR+PACER/Polar+Pacer+3.jpg',
+        ],
+      };
       const mockShoppingCartItem = {
         id: 1,
         userId,
         productId,
         price,
+        metadata,
         createdAt: new Date(),
       } as ShoppingCart;
 
       jest
-        .spyOn(repository, 'create')
+        .spyOn(repository, 'save')
         .mockResolvedValue(mockShoppingCartItem as never);
 
-      const result = await service.attach(userId, productId, price);
+      const result = await service.attach(userId, productId, price, metadata);
 
       expect(result).toBe(mockShoppingCartItem);
-      expect(repository.create).toHaveBeenCalledWith({
+      expect(repository.save).toHaveBeenCalledWith({
         userId,
         productId,
         price,
+        metadata,
       });
     });
   });
@@ -84,22 +99,38 @@ describe('ShoppingCartService', () => {
     it('should detach an item from the shopping cart', async () => {
       const userId = 1;
       const productId = 1;
-      const mockShoppingCartItem = {
+      const metadata = {
         id: 1,
-        userId,
-        productId,
-        price: 10,
-      } as ShoppingCart;
+        name: 'POLAR Pacer',
+        description: 'Relógio Esportivo com GPS',
+        price: 4558.87,
+        thumbnail:
+          'https://yacare-products-image.s3.sa-east-1.amazonaws.com/new-site/POLAR+PACER/Polar+Pacer+Thumb+2.png',
+        images: [
+          'https://yacare-products-image.s3.sa-east-1.amazonaws.com/new-site/POLAR+PACER/Polar+Pacer+Thumb+2.png',
+          'https://yacare-products-image.s3.sa-east-1.amazonaws.com/new-site/POLAR+PACER/Polar+Pacer+2.jpg',
+          'https://yacare-products-image.s3.sa-east-1.amazonaws.com/new-site/POLAR+PACER/Polar+Pacer+3.jpg',
+        ],
+      };
+      const mockShoppingCartItem = [
+        {
+          id: 1,
+          userId,
+          productId,
+          price: 10,
+          metadata,
+        },
+      ] as ShoppingCart[];
 
+      jest.spyOn(repository, 'find').mockResolvedValue(mockShoppingCartItem);
       jest
-        .spyOn(repository, 'findOneOrFail')
-        .mockResolvedValue(mockShoppingCartItem);
-      jest.spyOn(repository, 'remove').mockResolvedValue(mockShoppingCartItem);
+        .spyOn(repository, 'remove')
+        .mockResolvedValue(mockShoppingCartItem as any);
 
       const result = await service.detach(userId, productId);
 
       expect(result).toBe(mockShoppingCartItem);
-      expect(repository.findOneOrFail).toHaveBeenCalledWith({
+      expect(repository.find).toHaveBeenCalledWith({
         where: { userId, productId },
       });
       expect(repository.remove).toHaveBeenCalledWith(mockShoppingCartItem);
