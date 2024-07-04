@@ -1,3 +1,4 @@
+import type { Metadata } from './dto/shopping-cart-metadata.dto';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ShoppingCart } from './shopping-cart.entity';
@@ -34,11 +35,13 @@ export class ShoppingCartService {
     userId: number,
     productId: number,
     price: number,
+    metadata: Metadata,
   ): Promise<ShoppingCart> {
-    return this.shoppingCartRepository.create({
+    return this.shoppingCartRepository.save({
       userId,
       price,
       productId,
+      metadata,
     });
   }
 
@@ -50,8 +53,8 @@ export class ShoppingCartService {
   public async detach(
     userId: number,
     productId: number,
-  ): Promise<ShoppingCart> {
-    const item = await this.shoppingCartRepository.findOneOrFail({
+  ): Promise<ShoppingCart[]> {
+    const item = await this.shoppingCartRepository.find({
       where: {
         userId,
         productId,

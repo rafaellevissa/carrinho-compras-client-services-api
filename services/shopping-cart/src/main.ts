@@ -3,6 +3,7 @@ import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { AppModule } from './app.module';
 import consts from './common/constants';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -13,6 +14,9 @@ async function bootstrap() {
     .setVersion('1.0')
     .addTag('shopping-cart')
     .build();
+
+  app.useGlobalPipes(new ValidationPipe());
+  app.enableCors();
 
   const document = SwaggerModule.createDocument(app, config);
 

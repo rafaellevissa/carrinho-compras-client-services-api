@@ -27,18 +27,18 @@ export class ShoppingCartController {
   @ApiCreatedResponse({ description: 'Attach new item to user shopping cart' })
   @Post()
   public create(
-    @Body() { productId, price }: ShoppingCartDto,
+    @Body() { productId, price, metadata }: ShoppingCartDto,
   ): Promise<ShoppingCart> {
     const userId = 1;
 
-    return this.shoppingCartService.attach(userId, productId, price);
+    return this.shoppingCartService.attach(userId, productId, price, metadata);
   }
 
   @ApiOkResponse({ description: 'Detach item from the user shopping cart' })
   @Delete('/:productId')
   public remove(
     @Param('productId', ParseIntPipe) productId: number,
-  ): Promise<ShoppingCart> {
+  ): Promise<ShoppingCart[]> {
     const userId = 1;
 
     return this.shoppingCartService.detach(userId, productId);
