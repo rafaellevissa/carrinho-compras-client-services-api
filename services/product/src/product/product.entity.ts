@@ -25,6 +25,9 @@ export class Product extends BaseEntity {
   @Column()
   thumbnail: string;
 
+  @Column({ type: 'simple-array' })
+  images: string[];
+
   @CreateDateColumn()
   @Exclude()
   public createdAt: Date;

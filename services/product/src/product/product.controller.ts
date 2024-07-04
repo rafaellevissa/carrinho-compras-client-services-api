@@ -2,7 +2,7 @@ import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { Product } from './product.entity';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
-import { ApiOkResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('product')
 @Controller()
@@ -19,7 +19,7 @@ export class ProductController {
     description: 'Find a product by id',
     type: Product,
   })
-  @Get('/:id')
+  @Get(':id')
   public find(@Param('id', ParseIntPipe) id: number): Promise<Product> {
     return this.productService.getProduct(id);
   }
