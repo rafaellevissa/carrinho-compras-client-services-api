@@ -3,6 +3,10 @@
 This repository contains all the API services for the Allu challenge.
 front-end: https://github.com/rafaellevissa/allu-client
 
+## Architecture
+
+![Diagram](/docs/images/diagram.png)
+
 ## How to Run the Services
 
 To run all the services, you can access each service in the `services` folder and execute it using Docker Compose or npm locally. Remember to modify the `.env` file. The `.env.example` file is already configured to run locally with Docker, so if you're using Docker Compose, simply copy the contents of `.env.example` to `.env`.
@@ -21,7 +25,7 @@ Responsible for managing the shopping cart.
 
 Responsible for managing the order.
 
-Each order will be published to the rabbitmq 
+Each order will be published to the rabbitmq
 
 ![rabbitmq](/docs/images/rabbitmq.png)
 
