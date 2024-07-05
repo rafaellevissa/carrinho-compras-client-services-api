@@ -7,6 +7,14 @@ front-end: https://github.com/rafaellevissa/allu-client
 
 ![Diagram](/docs/images/diagram.png)
 
+### Api Gateway
+
+![Api Gateway](/docs/images/apigateway.png)
+
+### EC2
+
+![Ec2](/docs/images/ec2.png)
+
 ## How to Run the Services
 
 To run all the services, you can access each service in the `services` folder and execute it using Docker Compose or npm locally. Remember to modify the `.env` file. The `.env.example` file is already configured to run locally with Docker, so if you're using Docker Compose, simply copy the contents of `.env.example` to `.env`.
