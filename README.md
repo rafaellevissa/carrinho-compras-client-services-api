@@ -15,6 +15,12 @@ front-end: https://github.com/rafaellevissa/allu-client
 
 ![Ec2](/docs/images/ec2.png)
 
+### Cloudwatch Logs
+
+![Cloudwatch Logs Streams](/docs/images/cloudwatch-logstreams.png)
+
+![Cloudwatch Log Events](/docs/images/cloudwatch-logevents.png)
+
 ## How to Run the Services
 
 To run all the services, you can access each service in the `services` folder and execute it using Docker Compose or npm locally. Remember to modify the `.env` file. The `.env.example` file is already configured to run locally with Docker, so if you're using Docker Compose, simply copy the contents of `.env.example` to `.env`.
