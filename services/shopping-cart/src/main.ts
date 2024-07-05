@@ -4,9 +4,15 @@ import { AppModule } from './app.module';
 import consts from './common/constants';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
+import { Logger } from './common/logger';
+import { cloudwatchLogger } from './common/config/cloudwatch';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const isDevelopment = process.env.NODE_ENV == 'production' ? false : true;
+
+  const app = await NestFactory.create(AppModule, {
+    logger: isDevelopment ? console : new Logger(cloudwatchLogger),
+  });
 
   const config = new DocumentBuilder()
     .setTitle('Shopping Cart Service')

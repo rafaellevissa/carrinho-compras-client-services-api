@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom, timeout } from 'rxjs';
 import { OrderDto } from './dto/order.dto';
@@ -7,9 +7,11 @@ import { OrderDto } from './dto/order.dto';
 export class OrderService {
   constructor(@Inject('RMQ_SERVICE') private readonly client: ClientProxy) {}
 
-  public create(orderDto: OrderDto[]): Promise<any> {
-    return firstValueFrom(
+  public async create(orderDto: OrderDto[]): Promise<void> {
+    await firstValueFrom(
       this.client.emit({ cmd: 'notification' }, orderDto).pipe(timeout(5000)),
     );
+
+    Logger.log('Order sent to queue successfuly!');
   }
 }

@@ -8,8 +8,10 @@ import { Logger } from './common/logger';
 import { cloudwatchLogger } from './common/config/cloudwatch';
 
 async function bootstrap() {
+  const isDevelopment = process.env.NODE_ENV == 'production' ? false : true;
+
   const app = await NestFactory.create(AppModule, {
-    logger: new Logger(cloudwatchLogger),
+    logger: isDevelopment ? console : new Logger(cloudwatchLogger),
   });
 
   app.enableCors();
