@@ -17,6 +17,14 @@ Responsible for managing products.
 
 Responsible for managing the shopping cart.
 
+### Order
+
+Responsible for managing the order.
+
+Each order will be published to the rabbitmq 
+
+![rabbitmq](/docs/images/rabbitmq.png)
+
 ## API Documentation
 
 In the README of each project, you can access the API Swagger documentation for each service and find detailed instructions on how to run the service locally.
@@ -28,26 +36,26 @@ Nosso time de negócio necessita que seja desenvolvido um site com os seguintes 
 Funcionalidades do sistema:
 
 1. Catálogo de produtos: Uma listagem onde são exibidos os produtos disponíveis para
-assinatura, com nome, descrição, valor e imagem; (planilha com os dados anexo)
-a. Nesse catálogo deve ser implementado a técnica de “infinite scroll”, de forma
-que os produtos vão carregando na página a medida que o usuário realiza o
-scroll;
-b. Ao clicar em um produto, deve ser redirecionado para “Página do produto - Item
-3”;
-c. Deve ser aplicada uma lógica de cacheamento das informações do produto para
-melhorar o desempenho da página.
+   assinatura, com nome, descrição, valor e imagem; (planilha com os dados anexo)
+   a. Nesse catálogo deve ser implementado a técnica de “infinite scroll”, de forma
+   que os produtos vão carregando na página a medida que o usuário realiza o
+   scroll;
+   b. Ao clicar em um produto, deve ser redirecionado para “Página do produto - Item
+   3”;
+   c. Deve ser aplicada uma lógica de cacheamento das informações do produto para
+   melhorar o desempenho da página.
 
 2. Busca de produtos: No catálogo deve ser adicionado uma busca onde o usuário poderá
-procurar por um nome de produto ou categoria;
-a. Implementar a feature de “auto-complete” a medida que o usuário digita;
-b. Implementar uma lógica que torne a busca tolerante a erros de digitação.
+   procurar por um nome de produto ou categoria;
+   a. Implementar a feature de “auto-complete” a medida que o usuário digita;
+   b. Implementar uma lógica que torne a busca tolerante a erros de digitação.
 3. Página de produto: A página deve conter informações do produto como nome, uma
-descrição mais completa, valores para assinatura (anual e mensal), além de um
-carrossel de imagens do produto em questão.
-a. Aplicar tratamento das imagens para melhoria de desempenho da página.
+   descrição mais completa, valores para assinatura (anual e mensal), além de um
+   carrossel de imagens do produto em questão.
+   a. Aplicar tratamento das imagens para melhoria de desempenho da página.
 4. Carrinho de compras: O usuário deverá ter a possibilidade de adicionar/remover itens
-do seu carrinho de compras.
-a. Os itens do carrinho devem ficar salvos caso o usuário saia e volte para o site.
+   do seu carrinho de compras.
+   a. Os itens do carrinho devem ficar salvos caso o usuário saia e volte para o site.
 
 Requisitos/Premissas para o teste:
 
@@ -81,4 +89,3 @@ execução do projeto.
 Actions.
 ● Monitoramento e Logs:
 ○ Implementar logging centralizado utilizando uma ferramenta de sua preferência.
-
