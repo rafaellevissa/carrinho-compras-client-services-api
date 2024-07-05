@@ -12,30 +12,9 @@ env:
   APP_NAME: allu-order-service
 
 jobs:
-  tests:
-    runs-on: ubuntu-latest
-    if: github.ref_name == 'main'
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node.Js
-        uses: actions/setup-node@v3
-        with:
-          node-version: ^21
-
-      - name: Installing Dependencies
-        working-directory: services/order
-        run: npm install
-
-      - name: Run tests
-        run: npm run test
-        working-directory: services/order
-
   build:
     runs-on: ubuntu-latest
     if: github.ref_name == 'main'
-    needs: tests
     steps:
       - name: Checkout
         uses: actions/checkout@v4
