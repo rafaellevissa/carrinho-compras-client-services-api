@@ -1,3 +1,7 @@
+import { config } from 'dotenv';
+
+config();
+
 export default () => ({
   port: parseInt(process.env.APP_PORT) || 3001,
   isDevelopment: process.env.NODE_ENV == 'production' ? false : true,
@@ -8,7 +12,7 @@ export default () => ({
   aws: {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     region: process.env.AWS_REGION,
-    secretKey: process.env.AWS_SECRET_KEY,
+    secretKey: process.env.AWS_SECRET_ACCESS_KEY,
   },
   queue: {
     url: process.env.RABBITMQ_URL,
