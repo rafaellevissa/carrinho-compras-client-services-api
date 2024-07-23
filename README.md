@@ -1,7 +1,7 @@
-# Allu Challenge - API Services
+# carrinho-compras-client Challenge - API Services
 
-This repository contains all the API services for the Allu challenge.
-front-end: https://github.com/rafaellevissa/allu-client
+This repository contains all the API services for the carrinho-compras-client challenge.
+front-end: https://github.com/rafaellevissa/carrinho-compras-client
 
 ## Architecture
 
